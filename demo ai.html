@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>FoodRush — Fast & Fresh</title>
+
+  <!-- GOOGLE FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- BOOTSTRAP 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --accent:#e63946; /* primary brand color */
+      --muted:#6c757d;
+      --card-radius:18px;
+      --glass: rgba(255,255,255,0.06);
+      --transition: 300ms;
+    }
+
+    /* DARK THEME OVERRIDES */
+    .dark{ --bg: #0b0f12; --surface:#0f1720; --text:#e6eef6; --muted:#9aa6b2; }
+    .light{ --bg: #f7fbff; --surface:#ffffff; --text:#0b1220; --muted:#6c757d; }
+
+    html,body{ height:100%; }
+    body{
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg, #f7fbff);
+      color: var(--text,#0b1220);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* NAV */
+    .navbar{ backdrop-filter: blur(6px); background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3)); box-shadow:0 6px 20px rgba(2,6,23,0.06); }
+    .dark .navbar{ background: linear-gradient(90deg, rgba(10,12,16,0.64), rgba(10,12,16,0.46)); }
+    .brand{ font-family: 'Montserrat', sans-serif; font-weight:700; letter-spacing:0.4px; }
+
+    /* HERO */
+    .hero{
+      min-height:72vh; display:flex; align-items:center; background-image:linear-gradient(180deg, rgba(6,10,15,0.45), rgba(6,10,15,0.2)), url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=');
+      background-size:cover; background-position:center; color:#fff; border-radius:20px; margin-top:70px; padding:60px 30px; position:relative;
+    }
+    .hero h1{ font-family: 'Montserrat'; font-size:2.6rem; margin-bottom:0.6rem; text-shadow:0 6px 20px rgba(0,0,0,0.35); }
+    .hero p{ font-size:1.1rem; opacity:0.95; margin-bottom:1rem; }
+
+    .cta-primary{ background:var(--accent); border:none; padding:12px 22px; border-radius:12px; font-weight:600; box-shadow:0 8px 26px rgba(230,57,70,0.18); }
+    .cta-ghost{ background:transparent; border:1px solid rgba(255,255,255,0.18); color:#fff; padding:10px 18px; border-radius:10px; }
+
+    /* FILTER BUTTONS */
+    .filter-btn{ border-radius:999px; padding:8px 14px; border:1px solid rgba(15,20,25,0.06); }
+
+    /* CARDS */
+    .menu-card{ border-radius:16px; overflow:hidden; border:none; transition:transform var(--transition), box-shadow var(--transition); box-shadow:0 10px 24px rgba(15,20,25,0.06); }
+    .menu-card:hover{ transform:translateY(-8px); box-shadow:0 18px 40px rgba(15,20,25,0.12); }
+    .menu-card img{ width:100%; height:170px; object-fit:cover; }
+    .price{ color:var(--accent); font-weight:700; font-size:1.05rem; }
+
+    /* REVIEWS */
+    .reviews{ background: linear-gradient(180deg, rgba(250,250,250,0.6), rgba(255,255,255,0.4)); padding:40px; border-radius:14px; }
+
+    /* FOOTER */
+    footer{ background:transparent; padding:36px 0; }
+
+    /* STICKY ORDER BAR */
+    .order-bar{ position:fixed; right:22px; bottom:22px; z-index:1200; display:flex; gap:10px; align-items:center; }
+    .order-bar .btn{ border-radius:14px; box-shadow:0 10px 30px rgba(2,6,23,0.18); }
+
+    /* small devices tweaks */
+    @media (max-width:767px){
+      .hero{ padding:36px 18px; min-height:62vh; }
+      .hero h1{ font-size:1.9rem; }
+    }
+
+    /* accessibility focus */
+    a:focus, button:focus{ outline:3px solid rgba(0,0,0,0.08); outline-offset:3px; }
+    .menu-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.price {
+    font-size: 20px;
+}
+
+
+  </style>
+</head>
+
+<body class="light" id="page-root">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg fixed-top py-3">
+    <div class="container">
+      <a class="navbar-brand brand text-dark d-flex align-items-center gap-2" href="#">
+        <span class="fs-4">🍕</span>
+        <span>FoodRush</span>
+      </a>
+
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <button id="themeToggle" class="btn btn-sm btn-outline-secondary" aria-label="Toggle theme"><i class="fa-regular fa-moon"></i></button>
+        <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="d-none d-lg-flex align-items-center">
+          <a class="btn btn-outline-primary me-2" href="#menu">Menu</a>
+          <a class="btn btn-outline-secondary me-2" href="#about">About</a>
+          <a class="btn btn-outline-secondary" href="#contact">Contact</a>
+        </div>
+
+        <button class="btn btn-warning position-relative" id="cartBtn" aria-label="Cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="badge bg-danger position-absolute top-0 start-100 translate-middle" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Offcanvas for mobile -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title brand" id="offcanvasMenuLabel">FoodRush</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="list-unstyled">
+        <li><a href="#menu" class="d-block py-2">Menu</a></li>
+        <li><a href="#about" class="d-block py-2">About</a></li>
+        <li><a href="#contact" class="d-block py-2">Contact</a></li>
+        <li><a href="#offers" class="d-block py-2">Offers</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="container">
+    <section class="hero shadow mt-5">
+      <div class="row w-100 align-items-center">
+        <div class="col-lg-7">
+          <h1>Fast, Fresh & Delicious — Delivered to Your Door</h1>
+          <p class="lead">Handpicked ingredients, chef-curated recipes, and lightning-fast delivery. Order your favourites now.</p>
+
+          <div class="d-flex gap-2 mt-3">
+            <a href="#menu" class="cta-primary btn btn-lg">Order Now</a>
+            <button class="btn cta-ghost" id="viewOffers">See Offers</button>
+          </div>
+
+          <div class="mt-4 d-flex gap-3">
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-bolt fa-2x me-2"></i>
+              <div>
+                <div class="fw-bold">30–45 mins</div>
+                <div class="small text-muted">Average delivery time</div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-shield-halved fa-2x me-2"></i>
+              <div>
+                <div class="fw-bold">Hygienic</div>
+                <div class="small text-muted">Contactless delivery</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5 d-none d-lg-block">
+          <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=" alt="Delicious food" class="img-fluid rounded-3 shadow-lg">
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <!-- MENU -->
+  <main class="container my-5" id="menu">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="fw-bold">Our Menu</h2>
+
+      <div>
+        <button class="btn filter-btn me-2 active" data-filter="all">All</button>
+        <button class="btn filter-btn me-2" data-filter="pizza">Pizza</button>
+        <button class="btn filter-btn me-2" data-filter="burger">Burgers</button>
+        <button class="btn filter-btn me-2" data-filter="drinks">Drinks</button>
+        <button class="btn filter-btn" data-filter="dessert">Desserts</button>
+      </div>
+    </div>
+
+    <div class="row">
+
+    <!-- ITEM 1 -->
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card shadow-lg border-0 h-100 menu-card">
+            <img src="fr1.jpeg" class="card-img-top" alt="Margherita Pizza">
+            <div class="card-body text-center">
+                <h5 class="card-title font-weight-bold">Margherita Pizza</h5>
+                <p class="card-text text-muted mb-2">Classic cheese & tomato</p>
+                <p class="price text-danger font-weight-bold mb-3">₹199</p>
+                <button class="btn btn-outline-primary btn-sm mr-2"><i class="fas fa-cart-plus"></i> Add</button>
+                <button class="btn btn-danger btn-sm">Order Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ITEM 2 -->
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card shadow-lg border-0 h-100 menu-card">
+            <img src="fr2.jpg" class="card-img-top" alt="Cheese Burger">
+            <div class="card-body text-center">
+                <h5 class="card-title font-weight-bold">Cheese Burger</h5>
+                <p class="card-text text-muted mb-2">Loaded with cheese</p>
+                <p class="price text-danger font-weight-bold mb-3">₹149</p>
+                <button class="btn btn-outline-primary btn-sm mr-2"><i class="fas fa-cart-plus"></i> Add</button>
+                <button class="btn btn-danger btn-sm">Order Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ITEM 3 -->
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card shadow-lg border-0 h-100 menu-card">
+            <img src="fr5.jpeg" class="card-img-top" alt="Coca Cola">
+            <div class="card-body text-center">
+                <h5 class="card-title font-weight-bold">Coca Cola</h5>
+                <p class="card-text text-muted mb-2">Chilled soft drink</p>
+                <p class="price text-danger font-weight-bold mb-3">₹49</p>
+                <button class="btn btn-outline-primary btn-sm mr-2"><i class="fas fa-cart-plus"></i> Add</button>
+                <button class="btn btn-danger btn-sm">Order Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ITEM 4 -->
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card shadow-lg border-0 h-100 menu-card">
+            <img src="fr3.jpg" class="card-img-top" alt="Chocolate Cake">
+            <div class="card-body text-center">
+                <h5 class="card-title font-weight-bold">Chocolate Cake</h5>
+                <p class="card-text text-muted mb-2">Sweet & delicious</p>
+                <p class="price text-danger font-weight-bold mb-3">₹129</p>
+                <button class="btn btn-outline-primary btn-sm mr-2"><i class="fas fa-cart-plus"></i> Add</button>
+                <button class="btn btn-danger btn-sm">Order Now</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+        </div>
+      <!-- Menu items generated in JS for conciseness -->
+    </div>
+  </main>
+
+  <!-- ABOUT -->
+  <section class="container mb-5" id="about">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h3 class="text-danger fw-bold">About FoodRush</h3>
+        <p class="lead">We deliver freshly prepared meals made with love. Quality ingredients, transparent pricing and friendly service — that's our promise.</p>
+
+        <ul class="list-unstyled">
+          <li>✔ Fast Delivery</li>
+          <li>✔ Best Prices</li>
+          <li>✔ 24/7 Customer Support</li>
+        </ul>
+
+        <a href="#contact" class="btn btn-outline-primary mt-3">Get in Touch</a>
+      </div>
+      <div class="col-md-6">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=" alt="kitchen" class="img-fluid rounded-3 shadow-sm">
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="container mb-5">
+    <h3 class="fw-bold text-center mb-4">What Customers Say</h3>
+    <div class="row g-3 justify-content-center">
+      <div class="col-md-8 reviews p-4">
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner text-center">
+            <div class="carousel-item active">
+              <blockquote class="blockquote">
+                <p class="mb-2">"Delicious food and fast delivery!"</p>
+                <footer class="blockquote-footer">Rohan Sharma — ⭐⭐⭐⭐⭐</footer>
+              </blockquote>
+            </div>
+            <div class="carousel-item">
+              <blockquote class="blockquote">
+                <p class="mb-2">"Affordable & tasty! Loved the burgers 😍"</p>
+                <footer class="blockquote-footer">Priya Singh — ⭐⭐⭐⭐⭐</footer>
+              </blockquote>
+            </div>
+            <div class="carousel-item">
+              <blockquote class="blockquote">
+                <p class="mb-2">"Great taste! Add more desserts."</p>
+                <footer class="blockquote-footer">Aarav Patel — ⭐⭐⭐⭐</footer>
+              </blockquote>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="container mb-5" id="contact">
+    <div class="row">
+      <div class="col-lg-6">
+        <h4>Contact Us</h4>
+        <form id="contactForm" class="mt-3">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" class="form-control" rows="4" required></textarea>
+          </div>
+          <button class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+
+      <div class="col-lg-6">
+        <h5>Visit Us</h5>
+        <p>123 Food Street, Mumbai, India<br>📞 +91 98765 43210<br>✉ support@foodrush.com</p>
+
+        <div class="mt-3">
+          <iframe title="map" src="https://maps.google.com/maps?q=mumbai&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-4">
+      <div>
+        <h5 class="mb-0 brand">FoodRush</h5>
+        <small class="text-muted">© 2025 FoodRush — All Rights Reserved.</small>
+      </div>
+
+      <div class="d-flex gap-3 align-items-center mt-3 mt-md-0">
+        <a href="#" class="text-muted" aria-label="facebook"><i class="fa-brands fa-facebook fa-lg"></i></a>
+        <a href="#" class="text-muted" aria-label="instagram"><i class="fa-brands fa-instagram fa-lg"></i></a>
+        <a href="#" class="text-muted" aria-label="twitter"><i class="fa-brands fa-twitter fa-lg"></i></a>
+        <a href="tel:+919876543210" class="btn btn-outline-secondary btn-sm">📞 +91 98765 43210</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- STICKY ORDER BAR -->
+  <div class="order-bar">
+    <button class="btn btn-light shadow" id="quickCart">🛒 <span id="quickCount">0</span></button>
+    <button class="btn cta-primary" id="quickOrder">Order Now</button>
+  </div>
+
+  <!-- MODAL: ORDER -->
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Your Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="cartItems"></div>
+          <div class="d-flex justify-content-between mt-3">
+            <strong>Total</strong>
+            <strong id="cartTotal">₹0</strong>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Continue Browsing</button>
+          <button class="btn btn-success">Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Theme toggle with persistence
+    const root = document.getElementById('page-root');
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('foodrush_theme') || 'light';
+    function applyTheme(t){
+      root.className = t; localStorage.setItem('foodrush_theme', t);
+      themeToggle.innerHTML = t === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-regular fa-moon"></i>';
+    }
+    applyTheme(savedTheme);
+    themeToggle.addEventListener('click', ()=> applyTheme(root.classList.contains('light') ? 'dark' : 'light'));
+
+    // Menu items (could be loaded from API)
+    const menu = [
+      {id:1,category:'pizza',title:'Margherita',desc:'Classic Cheese & Tomato',price:199,img:'https://images.unsplash.com/photo-1601924638867-3ec1ff3b1a3b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s='},
+      {id:2,category:'burger',title:'Cheese Burger',desc:'Loaded with Cheese',price:149,img:'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s='},
+      {id:3,category:'drinks',title:'Coca Cola',desc:'Refreshing Chilled Drink',price:49,img:'https://images.unsplash.com/photo-1561043433-aaf687c4cf4b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s='},
+      {id:4,category:'dessert',title:'Chocolate Cake',desc:'Sweet & Delicious',price:129,img:'https://images.unsplash.com/photo-1542826438-0f8d4fa6a95a?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s='},
+      {id:5,category:'pizza',title:'Pepperoni',desc:'Spicy Pepperoni & Cheese',price:249,img:'https://images.unsplash.com/photo-1604917877934-5b4d5b8b0f37?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s='},
+      {id:6,category:'burger',title:'Veggie Burger',desc:'Fresh Veg Pattie',price:129,img:'https://images.unsplash.com/photo-1617191511634-3d0c0a84e3f4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s='}
+    ];
+
+    const menuGrid = document.getElementById('menuGrid');
+    const cart = {};
+
+    function renderMenu(items){
+      menuGrid.innerHTML = '';
+      items.forEach(it => {
+        const col = document.createElement('div'); col.className='col-sm-6 col-md-4 col-lg-3';
+        col.innerHTML = `
+          <div class="card menu-card">
+            <img src="${it.img}" alt="${it.title}">
+            <div class="card-body">
+              <h5 class="card-title">${it.title}</h5>
+              <p class="card-text small text-muted">${it.desc}</p>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="price">₹${it.price}</div>
+                <div>
+                  <button class="btn btn-sm btn-outline-primary me-2" onclick="addToCart(${it.id})">Add</button>
+                  <button class="btn btn-sm btn-link" onclick="showDetails(${it.id})">Details</button>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        menuGrid.appendChild(col);
+      });
+    }
+    renderMenu(menu);
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', e=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      if(f==='all') renderMenu(menu); else renderMenu(menu.filter(m=>m.category===f));
+    }));
+
+    function addToCart(id){
+      const item = menu.find(m=>m.id===id);
+      if(!cart[id]) cart[id] = {...item, qty:1}; else cart[id].qty++;
+      updateCartUI();
+    }
+
+    function updateCartUI(){
+      const count = Object.values(cart).reduce((s,i)=>s+i.qty,0);
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('quickCount').textContent = count;
+    }
+
+    window.addToCart = addToCart;
+
+    // show details (simple alert for demo)
+    function showDetails(id){
+      const i = menu.find(m=>m.id===id);
+      alert(`${i.title} — ${i.desc}
+Price: ₹${i.price}`);
+    }
+    window.showDetails = showDetails;
+
+    // Cart modal
+    const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+    document.getElementById('cartBtn').addEventListener('click', ()=>{
+      renderCartItems(); orderModal.show();
+    });
+    document.getElementById('quickCart').addEventListener('click', ()=>{ renderCartItems(); orderModal.show(); });
+
+    function renderCartItems(){
+      const container = document.getElementById('cartItems'); container.innerHTML='';
+      let total=0;
+      for(const id in cart){
+        const it = cart[id];
+        total += it.price * it.qty;
+        const row = document.createElement('div');
+        row.className='d-flex justify-content-between align-items-center mb-2';
+        row.innerHTML = `<div><strong>${it.title}</strong><div class="small text-muted">₹${it.price} x ${it.qty}</div></div><div><button class="btn btn-sm btn-outline-secondary me-2" onclick="changeQty(${id}, -1)">-</button><button class="btn btn-sm btn-outline-secondary" onclick="changeQty(${id}, 1)">+</button></div>`;
+        container.appendChild(row);
+      }
+      document.getElementById('cartTotal').textContent = `₹${total}`;
+    }
+
+    window.changeQty = function(id, delta){
+      if(!cart[id]) return; cart[id].qty += delta; if(cart[id].qty<=0) delete cart[id]; updateCartUI(); renderCartItems();
+    }
+
+    // Quick Order opens modal
+    document.getElementById('quickOrder').addEventListener('click', ()=> orderModal.show());
+
+    // Contact form basic submit
+    document.getElementById('contactForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      alert('Thanks — we received your message and will get back soon.');
+      e.target.reset();
+    });
+
+    // Offers button
+    document.getElementById('viewOffers').addEventListener('click', ()=> alert('Offer: Flat 20% off on orders above ₹499'));
+
+  </script>
+</body>
+
+</html>
